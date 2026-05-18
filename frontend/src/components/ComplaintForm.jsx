@@ -171,17 +171,42 @@ function ComplaintForm({ fetchComplaints, closeForm }) {
                 Select Department
               </option>
 
-              <option>OPD</option>
-              <option>IPD</option>
+              <option>Admin Block</option>
+              <option>CSSD</option>
+              <option>Store</option>
+              <option>Library</option>
+              <option>Accounts</option>
+              <option>HR</option>
+              <option>Blood Bank</option>
+              <option>Marketing</option>
               <option>ICU</option>
-              <option>OT</option>
-              <option>Billing</option>
-              <option>Pharmacy</option>
+              <option>HDU</option>
+              <option>Dialysis</option>
+              <option>OT MSB</option>
+              <option>Housekeeping</option>
+              <option>MSB - NS 2nd Floor</option>
+              <option>Cathlab</option>
               <option>Laboratory</option>
+              <option>Vertigo Lab</option>
+              <option>OPD Reception</option>
+              <option>Central Reception</option>
+              <option>Doctor Room</option>
               <option>Radiology</option>
-              <option>Reception</option>
-              <option>Ward</option>
-              <option>Other</option>
+              <option>Pharmacy</option>
+              <option>ECG</option>
+              <option>Canteen</option>
+              <option>Physiotherapy</option>
+              <option>TPA</option>
+              <option>Cash Counter</option>
+              <option>Security</option>
+              <option>Emergency</option>
+              <option>MCB - OT</option>
+              <option>MCB - Observation/Recovery</option>
+              <option>MCB - NICU/PICU</option>
+              <option>MCB - MRD</option>
+              <option>MCB - PRO</option>
+              <option>Other</option>              
+
 
             </select>
 
