@@ -100,4 +100,83 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// =======================================
+// CHANGE PASSWORD
+// =======================================
+
+router.put("/change-password", async (req, res) => {
+
+  try {
+
+    const {
+      username,
+      oldPassword,
+      newPassword,
+    } = req.body;
+
+    const user = await prisma.user.findUnique({
+
+      where: {
+        username,
+      },
+
+    });
+
+    if (!user) {
+
+      return res.status(404).json({
+        message: "User not found",
+      });
+
+    }
+
+    const isMatch = await bcrypt.compare(
+      oldPassword,
+      user.password
+    );
+
+    if (!isMatch) {
+
+      return res.status(400).json({
+        message: "Old password incorrect",
+      });
+
+    }
+
+    const hashedPassword = await bcrypt.hash(
+      newPassword,
+      10
+    );
+
+    await prisma.user.update({
+
+      where: {
+        username,
+      },
+
+      data: {
+        password: hashedPassword,
+      },
+
+    });
+
+    res.json({
+
+      message: "Password changed successfully",
+
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+
+      message: "Server error",
+
+    });
+
+  }
+});
+
 module.exports = router;
