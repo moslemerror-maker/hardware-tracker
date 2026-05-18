@@ -29,7 +29,7 @@ function Login() {
         JSON.stringify(response.data.user)
       );
 
-      alert("Login Successful");
+      window.location.href = "/dashboard";
 
       console.log(response.data);
 
