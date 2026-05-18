@@ -48,11 +48,12 @@ router.post("/", authMiddleware, async (req, res) => {
       department,
       description,
       reportTime,
+      complaintDate,
     } = req.body;
 
     const complaint = await prisma.complaint.create({
       data: {
-        complaintDate: new Date(),
+        complaintDate: new Date(complaintDate),
         department,
         description,
         reportTime,
