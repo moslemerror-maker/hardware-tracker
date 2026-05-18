@@ -57,9 +57,49 @@ router.post("/", authMiddleware, async (req, res) => {
       department,
       description,
       reportTime,
+      respondTime,
       complaintDate,
       priority,
     } = req.body;
+
+
+    // ===================================
+    // CALCULATE INTERVAL
+    // ===================================
+
+    let intervalMinute = null;
+
+    if (reportTime && respondTime) {
+
+      const report = new Date(
+        `2000-01-01T${reportTime}`
+      );
+
+      const respond = new Date(
+        `2000-01-01T${respondTime}`
+      );
+
+      const diffMs = respond - report;
+
+      const totalMinutes = Math.floor(
+        diffMs / 60000
+      );
+
+      const hours = String(
+        Math.floor(totalMinutes / 60)
+      ).padStart(2, "0");
+
+      const minutes = String(
+        totalMinutes % 60
+      ).padStart(2, "0");
+
+      intervalMinute = `${hours}:${minutes}`;
+    }
+
+
+    // ===================================
+    // CREATE DATABASE ENTRY
+    // ===================================
 
     const complaint = await prisma.complaint.create({
 
@@ -72,6 +112,10 @@ router.post("/", authMiddleware, async (req, res) => {
         description,
 
         reportTime,
+
+        respondTime,
+
+        intervalMinute,
 
         priority,
 
@@ -233,10 +277,50 @@ router.put("/:id", authMiddleware, async (req, res) => {
       department,
       description,
       reportTime,
+      respondTime,
       complaintDate,
       priority,
       status,
     } = req.body;
+
+
+    // ===================================
+    // RECALCULATE INTERVAL
+    // ===================================
+
+    let intervalMinute = null;
+
+    if (reportTime && respondTime) {
+
+      const report = new Date(
+        `2000-01-01T${reportTime}`
+      );
+
+      const respond = new Date(
+        `2000-01-01T${respondTime}`
+      );
+
+      const diffMs = respond - report;
+
+      const totalMinutes = Math.floor(
+        diffMs / 60000
+      );
+
+      const hours = String(
+        Math.floor(totalMinutes / 60)
+      ).padStart(2, "0");
+
+      const minutes = String(
+        totalMinutes % 60
+      ).padStart(2, "0");
+
+      intervalMinute = `${hours}:${minutes}`;
+    }
+
+
+    // ===================================
+    // UPDATE DATABASE ENTRY
+    // ===================================
 
     const complaint = await prisma.complaint.update({
 
@@ -253,6 +337,10 @@ router.put("/:id", authMiddleware, async (req, res) => {
         description,
 
         reportTime,
+
+        respondTime,
+
+        intervalMinute,
 
         priority,
 
@@ -301,7 +389,7 @@ router.get("/export/excel", authMiddleware, async (req, res) => {
     // TITLE
     // =====================================
 
-    worksheet.mergeCells("A1:G1");
+    worksheet.mergeCells("A1:I1");
 
     const titleCell = worksheet.getCell("A1");
 
@@ -333,6 +421,8 @@ router.get("/export/excel", authMiddleware, async (req, res) => {
       "Status",
       "User",
       "Report Time",
+      "Respond Time",
+      "Interval",
 
     ];
 
@@ -373,11 +463,15 @@ router.get("/export/excel", authMiddleware, async (req, res) => {
 
       { key: "reportTime", width: 15 },
 
+      { key: "respondTime", width: 15 },
+
+      { key: "intervalMinute", width: 15 },
+
     ];
 
 
     // =====================================
-    // FETCH DATA
+    // FETCH DATABASE RECORDS
     // =====================================
 
     const complaints = await prisma.complaint.findMany({
@@ -394,7 +488,7 @@ router.get("/export/excel", authMiddleware, async (req, res) => {
 
 
     // =====================================
-    // INSERT DATA ROWS
+    // INSERT ROWS
     // =====================================
 
     complaints.forEach((item) => {
@@ -416,6 +510,10 @@ router.get("/export/excel", authMiddleware, async (req, res) => {
         user: item.user.fullName,
 
         reportTime: item.reportTime,
+
+        respondTime: item.respondTime,
+
+        intervalMinute: item.intervalMinute,
 
       });
 

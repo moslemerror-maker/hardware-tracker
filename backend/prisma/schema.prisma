@@ -21,9 +21,9 @@ model Complaint {
   complaintDate  DateTime
   department     String
   description    String
-  reportTime     String?
+  reportTime     String
   respondTime    String?
-  intervalMinute Int?
+  intervalMinute String?
   status         String   @default("Pending")
   priority       String   @default("Normal")
 
