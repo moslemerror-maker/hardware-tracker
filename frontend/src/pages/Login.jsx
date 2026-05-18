@@ -1,6 +1,8 @@
 import { useState } from "react";
 import api from "../services/api";
 
+import logo from "../assets/logo.png";
+
 function Login() {
 
   const [formData, setFormData] = useState({
@@ -57,7 +59,25 @@ function Login() {
 
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-10">
 
-        {/* HOSPITAL TITLE */}
+        {/* =====================================
+            LOGO
+        ===================================== */}
+
+        <div className="flex justify-center mb-5">
+
+          <img
+            src={logo}
+            alt="Hospital Logo"
+            className="w-40 h-40 object-contain"
+          />
+
+        </div>
+
+
+        {/* =====================================
+            HOSPITAL TITLE
+        ===================================== */}
+
         <div className="text-center mb-8">
 
           <h1 className="text-4xl font-bold text-blue-700">
@@ -71,7 +91,10 @@ function Login() {
         </div>
 
 
-        {/* LOGIN FORM */}
+        {/* =====================================
+            LOGIN FORM
+        ===================================== */}
+
         <form
           onSubmit={handleLogin}
           className="space-y-5"
@@ -125,10 +148,13 @@ function Login() {
         </form>
 
 
-        {/* FOOTER */}
+        {/* =====================================
+            FOOTER
+        ===================================== */}
+
         <div className="text-center mt-8 text-sm text-gray-500">
 
-          Developed by MH IT Team
+          Developed for Internal IT Operations
 
         </div>
 
