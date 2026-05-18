@@ -186,14 +186,73 @@ router.get("/", authMiddleware, async (req, res) => {
 
 
 // =======================================
-// UPDATE STATUS
+// UPDATE STATUS + RESPOND TIME
 // =======================================
 
 router.put("/:id/status", authMiddleware, async (req, res) => {
 
   try {
 
-    const { status } = req.body;
+    const {
+      status,
+      respondTime,
+    } = req.body;
+
+
+    // ===================================
+    // GET EXISTING COMPLAINT
+    // ===================================
+
+    const existingComplaint =
+      await prisma.complaint.findUnique({
+
+        where: {
+          id: Number(req.params.id),
+        },
+
+      });
+
+
+    // ===================================
+    // CALCULATE INTERVAL
+    // ===================================
+
+    let intervalMinute = null;
+
+    if (
+      existingComplaint.reportTime &&
+      respondTime
+    ) {
+
+      const report = new Date(
+        `2000-01-01T${existingComplaint.reportTime}`
+      );
+
+      const respond = new Date(
+        `2000-01-01T${respondTime}`
+      );
+
+      const diffMs = respond - report;
+
+      const totalMinutes = Math.floor(
+        diffMs / 60000
+      );
+
+      const hours = String(
+        Math.floor(totalMinutes / 60)
+      ).padStart(2, "0");
+
+      const minutes = String(
+        totalMinutes % 60
+      ).padStart(2, "0");
+
+      intervalMinute = `${hours}:${minutes}`;
+    }
+
+
+    // ===================================
+    // UPDATE DATABASE
+    // ===================================
 
     const complaint = await prisma.complaint.update({
 
@@ -202,14 +261,20 @@ router.put("/:id/status", authMiddleware, async (req, res) => {
       },
 
       data: {
+
         status,
+
+        respondTime,
+
+        intervalMinute,
+
       },
 
     });
 
     res.json({
 
-      message: "Status updated",
+      message: "Complaint completed",
 
       complaint,
 
