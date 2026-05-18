@@ -5,6 +5,7 @@ import api from "../services/api";
 import ComplaintForm from "../components/ComplaintForm";
 import ComplaintTable from "../components/ComplaintTable";
 import ChangePassword from "../components/ChangePassword";
+import AddUserModal from "../components/AddUserModal";
 
 function Dashboard() {
 
@@ -15,6 +16,9 @@ function Dashboard() {
   const [showForm, setShowForm] = useState(false);
 
   const [showPasswordModal, setShowPasswordModal] =
+    useState(false);
+
+  const [showAddUserModal, setShowAddUserModal] =
     useState(false);
 
 
@@ -93,11 +97,22 @@ function Dashboard() {
           Hardware Complaint Tracker
         </h1>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
 
           <p className="font-semibold">
             Welcome, {user?.fullName}
           </p>
+
+
+          {/* ADD USER */}
+          <button
+            onClick={() =>
+              setShowAddUserModal(true)
+            }
+            className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700"
+          >
+            Add User
+          </button>
 
 
           {/* CHANGE PASSWORD */}
@@ -139,6 +154,21 @@ function Dashboard() {
         <ChangePassword
           closeModal={() =>
             setShowPasswordModal(false)
+          }
+        />
+
+      )}
+
+
+      {/* =====================================
+          ADD USER MODAL
+      ===================================== */}
+
+      {showAddUserModal && (
+
+        <AddUserModal
+          closeModal={() =>
+            setShowAddUserModal(false)
           }
         />
 
@@ -220,7 +250,7 @@ function Dashboard() {
             TOP ACTION BAR
         ===================================== */}
 
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
 
           <h2 className="text-3xl font-bold text-gray-700">
             Dashboard
