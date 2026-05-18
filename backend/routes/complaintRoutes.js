@@ -509,11 +509,11 @@ router.get("/export/excel", authMiddleware, async (req, res) => {
 
         user: item.user.fullName,
 
-        reportTime: item.reportTime,
+        reportTime: item.reportTime || "",
 
-        respondTime: item.respondTime,
+        respondTime: item.respondTime || "",
 
-        intervalMinute: item.intervalMinute,
+        intervalMinute: item.intervalMinute || "",
 
       });
 
