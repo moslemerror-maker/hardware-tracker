@@ -297,71 +297,89 @@ router.get("/export/excel", authMiddleware, async (req, res) => {
     const worksheet = workbook.addWorksheet("Complaints");
 
 
+    // =====================================
     // TITLE
+    // =====================================
+
     worksheet.mergeCells("A1:G1");
 
-    worksheet.getCell("A1").value =
-      "Hardware Complaint Tracker";
+    const titleCell = worksheet.getCell("A1");
 
-    worksheet.getCell("A1").font = {
+    titleCell.value = "Hardware Complaint Tracker";
+
+    titleCell.font = {
       bold: true,
-      size: 18,
+      size: 20,
     };
 
-    worksheet.getCell("A1").alignment = {
+    titleCell.alignment = {
       horizontal: "center",
+      vertical: "middle",
+    };
+
+    worksheet.getRow(1).height = 30;
+
+
+    // =====================================
+    // COLUMN HEADINGS
+    // =====================================
+
+    worksheet.getRow(2).values = [
+
+      "Date",
+      "Department",
+      "Description",
+      "Priority",
+      "Status",
+      "User",
+      "Report Time",
+
+    ];
+
+    worksheet.getRow(2).font = {
+      bold: true,
+    };
+
+    worksheet.getRow(2).fill = {
+
+      type: "pattern",
+
+      pattern: "solid",
+
+      fgColor: {
+        argb: "D9EAF7",
+      },
+
     };
 
 
-    // HEADER ROW
+    // =====================================
+    // COLUMN WIDTHS
+    // =====================================
+
     worksheet.columns = [
 
-      {
-        header: "Date",
-        key: "date",
-        width: 15,
-      },
+      { key: "date", width: 15 },
 
-      {
-        header: "Department",
-        key: "department",
-        width: 20,
-      },
+      { key: "department", width: 20 },
 
-      {
-        header: "Description",
-        key: "description",
-        width: 40,
-      },
+      { key: "description", width: 40 },
 
-      {
-        header: "Priority",
-        key: "priority",
-        width: 15,
-      },
+      { key: "priority", width: 15 },
 
-      {
-        header: "Status",
-        key: "status",
-        width: 15,
-      },
+      { key: "status", width: 15 },
 
-      {
-        header: "User",
-        key: "user",
-        width: 25,
-      },
+      { key: "user", width: 25 },
 
-      {
-        header: "Report Time",
-        key: "reportTime",
-        width: 15,
-      },
+      { key: "reportTime", width: 15 },
 
     ];
 
 
-    // FETCH DATABASE RECORDS
+    // =====================================
+    // FETCH DATA
+    // =====================================
+
     const complaints = await prisma.complaint.findMany({
 
       include: {
@@ -375,7 +393,10 @@ router.get("/export/excel", authMiddleware, async (req, res) => {
     });
 
 
-    // INSERT ROWS
+    // =====================================
+    // INSERT DATA ROWS
+    // =====================================
+
     complaints.forEach((item) => {
 
       worksheet.addRow({
@@ -401,25 +422,10 @@ router.get("/export/excel", authMiddleware, async (req, res) => {
     });
 
 
-    // HEADER STYLING
-    worksheet.getRow(2).font = {
-      bold: true,
-    };
-
-    worksheet.getRow(2).fill = {
-
-      type: "pattern",
-
-      pattern: "solid",
-
-      fgColor: {
-        argb: "D9EAF7",
-      },
-
-    };
-
-
+    // =====================================
     // BORDER STYLING
+    // =====================================
+
     worksheet.eachRow((row) => {
 
       row.eachCell((cell) => {
@@ -449,7 +455,29 @@ router.get("/export/excel", authMiddleware, async (req, res) => {
     });
 
 
+    // =====================================
+    // ALIGNMENT
+    // =====================================
+
+    worksheet.eachRow((row) => {
+
+      row.eachCell((cell) => {
+
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: "left",
+          wrapText: true,
+        };
+
+      });
+
+    });
+
+
+    // =====================================
     // DOWNLOAD RESPONSE
+    // =====================================
+
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
