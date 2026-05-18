@@ -21,10 +21,11 @@ model Complaint {
   complaintDate  DateTime
   department     String
   description    String
-  reportTime     String
+  reportTime     String?
   respondTime    String?
   intervalMinute Int?
   status         String   @default("Pending")
+  priority       String   @default("Normal")
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
