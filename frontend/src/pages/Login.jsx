@@ -128,7 +128,7 @@ function Login() {
         {/* FOOTER */}
         <div className="text-center mt-8 text-sm text-gray-500">
 
-          Developed for Internal IT Operations
+          Developed by MH IT Team
 
         </div>
 
